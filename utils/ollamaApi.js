@@ -11,7 +11,6 @@ async function getResponse(model, prompt) {
   try {
     // Construct payload
     const payload = { model, prompt, stream: false };
-    console.log("Payload being sent:", JSON.stringify(payload));
 
     const response = await fetch(endpointUrl, {
       method: "POST",
@@ -23,7 +22,6 @@ async function getResponse(model, prompt) {
 
     // Log raw response before parsing
     const rawResponse = await response.text();
-    console.log("Raw response received:", rawResponse);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
