@@ -21,6 +21,7 @@ client.on('messageCreate', (message) => {
     if(message.author.bot) return;
     // Isn't Chat Bot Channel return.
     if (!(message.channel.id === CHATBOT_CHANNEL_ID)) return;
+    message.channel.sendTyping();
     getResponse('mashiro:1.2b', content)
         .then(response => {
             message.reply(response);
