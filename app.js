@@ -1,8 +1,12 @@
 const { Client, GatewayIntentBits, Partials} = require('discord.js');
 const { getResponse } = require('./utils/ollamaApi');
+const express = require('express')
 require('dotenv').config();
 
 const { DISCORD_TOKEN, CHATBOT_CHANNEL_ID } = process.env;
+const app = express();
+
+app.set('view engine', 'ejs');
 
 const client = new Client({
     intents: [
@@ -13,6 +17,11 @@ const client = new Client({
         GatewayIntentBits.GuildMessageReactions,
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction]
+});
+
+
+app.get('/', (req, res) => {
+    res.send('hello');
 });
 
 
@@ -28,6 +37,9 @@ client.on('messageCreate', (message) => {
         })
         .catch(error => console.error('Error:', error));
 });
+
+
+app.listen(8080);
 
 
 client.login(DISCORD_TOKEN)
