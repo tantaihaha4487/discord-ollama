@@ -31,7 +31,7 @@ client.on('messageCreate', (message) => {
     // Isn't Chat Bot Channel return.
     if (!(message.channel.id === CHATBOT_CHANNEL_ID)) return;
     message.channel.sendTyping();
-    getResponse('mashiro:1.2b', content)
+    getResponse('mashiro', content)
         .then(response => {
             message.reply(response);
         })
@@ -39,7 +39,7 @@ client.on('messageCreate', (message) => {
 });
 
 
-app.listen(8080);
+app.listen(6969);
 
 
 client.login(DISCORD_TOKEN)
