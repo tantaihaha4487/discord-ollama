@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Models</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select an Ollama Model</h1>
+        <select id="modelSelect">
+            <option value="">Loading models...</option>
+        </select>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const selectElement = document.getElementById('modelSelect');
+            try {
+                const response = await fetch('http://localhost:11434/api/tags');
+                const data = await response.json();
+                models = data.models;
+                selectElement.innerHTML = models.map(model => `<option value="${model.id}">${model.name}</option>`).join('');
+            } catch (error) {
+                selectElement.innerHTML = '<option value="">Failed to load models</option>';
+                console.error('Error fetching models:', error);
+            }
+        });
+    </script>
+</body>
+</html>

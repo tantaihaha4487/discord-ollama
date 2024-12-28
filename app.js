@@ -21,7 +21,7 @@ const client = new Client({
 
 
 app.get('/', (req, res) => {
-    res.send('hello');
+    res.render('index.ejs');
 });
 
 
