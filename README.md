@@ -30,4 +30,3 @@ Follow these steps to run the code on your machine:
 6. **Access the Application**
     Open your browser and navigate to `http://localhost:6969` to see the running application.
 
-For more detailed instructions, refer to the [official documentation](https://github.com/yourusername/discord-ollama/wiki).
