@@ -1,16 +1,10 @@
-const endpointUrl = "http://127.0.0.1:11434/api/generate";
+const endpointUrl = "http://127.0.0.1:11434/api/chat";
 
-/**
- * Fetches a response from the Ollama API based on the provided model and prompt.
- *
- * @param {string} model - The model to use for generating a response.
- * @param {string} prompt - The prompt for which a response is required.
- * @returns {Promise<string>} - The API response or an error message.
- */
+
 async function getResponse(model, prompt) {
   try {
     // Construct payload
-    const payload = { model, prompt, stream: false };
+    const payload = { model, messages: chatHistory, stream: false };
 
     const response = await fetch(endpointUrl, {
       method: "POST",
@@ -28,7 +22,8 @@ async function getResponse(model, prompt) {
     }
 
     const data = JSON.parse(rawResponse); // Parse raw response
-    return data.response;
+    console.log("API response:", data);
+    return data.message.content;
   } catch (error) {
     console.error("Error details:", error);
     return `Error: ${error.message}`;

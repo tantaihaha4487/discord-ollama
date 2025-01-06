@@ -3,7 +3,7 @@ const { getResponse } = require('./utils/ollamaApi');
 const express = require('express')
 require('dotenv').config();
 
-const { DISCORD_TOKEN, CHATBOT_CHANNEL_ID } = process.env;
+const { DISCORD_TOKEN, CHATBOT_CHANNEL_ID, SYSTEM_PROMPT } = process.env;
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -27,11 +27,23 @@ app.get('/', (req, res) => {
 
 client.on('messageCreate', (message) => {
     const content = message.content;
+    chatHistory = [
+        {
+        "role": "system",
+        "content": SYSTEM_PROMPT
+        },
+        {
+            "role": "user",
+            "content": content
+        }
+
+];
+
     if(message.author.bot) return;
     // Isn't Chat Bot Channel return.
     if (!(message.channel.id === CHATBOT_CHANNEL_ID)) return;
     message.channel.sendTyping();
-    getResponse('mashiro', content)
+    getResponse('mashiro', chatHistory)
         .then(response => {
             message.reply(response);
         })
