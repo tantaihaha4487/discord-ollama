@@ -1,7 +1,7 @@
 const endpointUrl = "http://127.0.0.1:11434/api/chat";
 
 
-async function getResponse(model, prompt) {
+async function getResponse(model, chatHistory) {
   try {
     // Construct payload
     const payload = { model, messages: chatHistory, stream: false };
@@ -26,7 +26,7 @@ async function getResponse(model, prompt) {
     return data.message.content;
   } catch (error) {
     console.error("Error details:", error);
-    return `Error: ${error.message}`;
+    throw new error("Error details:", error);
   }
 }
 

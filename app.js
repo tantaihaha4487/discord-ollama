@@ -25,29 +25,39 @@ app.get('/', (req, res) => {
 });
 
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
+    if (message.author.bot) return;
+    if (message.channel.id !== CHATBOT_CHANNEL_ID) return;
+
     const content = message.content;
-    chatHistory = [
+    const chatHistory = [
         {
-        "role": "system",
-        "content": SYSTEM_PROMPT
+            "role": "system",
+            "content": SYSTEM_PROMPT
         },
         {
             "role": "user",
             "content": content
         }
+    ];
 
-];
-
-    if(message.author.bot) return;
-    // Isn't Chat Bot Channel return.
-    if (!(message.channel.id === CHATBOT_CHANNEL_ID)) return;
-    message.channel.sendTyping();
-    getResponse('mashiro', chatHistory)
-        .then(response => {
-            message.reply(response);
-        })
-        .catch(error => console.error('Error:', error));
+    try {
+        message.channel.sendTyping();
+        const sent = await message.reply({ content: "Mashiro's thinking ...", fetchReply: true });
+        getResponse('mashiro', chatHistory)
+           .then((response) => {
+                sent.edit({ content: response });
+            })
+            .catch(err => {
+                sent.delete();
+                message.reply({ content: "Error occurred while communicating with Mashiro.", ephemeral: true });
+            });
+        
+    } catch (error) {
+        console.error('Error:', error);
+        sent.delete();
+        message.reply({ content: "Error occurred while communicating with Mashiro.", ephemeral: true });
+    }
 });
 
 
