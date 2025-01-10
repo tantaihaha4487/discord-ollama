@@ -1,12 +1,16 @@
-const { Client, GatewayIntentBits, Partials} = require('discord.js');
-const { getResponse } = require('./utils/ollamaApi');
-const express = require('express')
 require('dotenv').config();
+const express = require('express');
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const { getResponse } = require('./utils/ollamaApi');
+
+const bodyParser = require('body-parser');
 
 const { DISCORD_TOKEN, CHATBOT_CHANNEL_ID, SYSTEM_PROMPT } = process.env;
 const app = express();
+let model = "hf.co/mashironotdev/mashiro:Q4_K_M"; // Default model name.
 
 app.set('view engine', 'ejs');
+app.use(bodyParser.json());
 
 const client = new Client({
     intents: [
@@ -19,11 +23,15 @@ const client = new Client({
     partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
 
-
 app.get('/', (req, res) => {
     res.render('index.ejs');
 });
 
+app.post('/api/selectModel', (req, res) => {
+    model = req.body.model;
+    console.log(`Selected model: ${model}`); // Debugging line
+    res.sendStatus(200);
+});
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
@@ -43,20 +51,21 @@ client.on('messageCreate', async (message) => {
 
     try {
         message.channel.sendTyping();
-        const sent = await message.reply({ content: "Mashiro's thinking ...", fetchReply: true });
-        getResponse('mashiro', chatHistory)
+        const sent = await message.reply({ content: "Mashiro's thinking ..." });
+        getResponse(model, chatHistory)
            .then((response) => {
-                sent.edit({ content: response });
-            })
-            .catch(err => {
                 sent.delete();
-                message.reply({ content: "Error occurred while communicating with Mashiro.", ephemeral: true });
+                message.reply({ content: response });
+            })
+            .catch(async err => {
+                sent.delete();
+                await message.reply({ content: "Error occurred while communicating with Mashiro.", ephemeral: true });
             });
         
     } catch (error) {
         console.error('Error:', error);
         sent.delete();
-        message.reply({ content: "Error occurred while communicating with Mashiro.", ephemeral: true });
+        await message.reply({ content: "Error occurred while communicating with Mashiro.", ephemeral: true });
     }
 });
 

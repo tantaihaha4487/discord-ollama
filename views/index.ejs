@@ -36,7 +36,7 @@
             });
 
             try {
-                const response = await fetch('http://localhost:11434/api/tags');
+                const response = await fetch('http://127.0.0.1:11434/api/tags');
                 const data = await response.json();
                 const models = data.models;
                 selectElement.innerHTML = models.map(model => `<option value="${model.id}">${model.name}</option>`).join('');
