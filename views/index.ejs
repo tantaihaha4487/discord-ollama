@@ -39,7 +39,7 @@
                 const response = await fetch('http://127.0.0.1:11434/api/tags');
                 const data = await response.json();
                 const models = data.models;
-                selectElement.innerHTML = models.map(model => `<option value="${model.id}">${model.name}</option>`).join('');
+                selectElement.innerHTML = models.map(model => `<option value="${model.name}">${model.name}</option>`).join('');
             } catch (error) {
                 selectElement.innerHTML = '<option value="">Failed to load models</option>';
                 console.error('Error fetching models:', error);
