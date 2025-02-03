@@ -4,7 +4,7 @@ Follow these steps to run the code on your machine:
 
 1. **Clone the Repository**
     ```sh
-    git clone https://github.com/yourusername/discord-ollama.git
+    git clone https://github.com/tantaihaha4487/discord-ollama.git
     cd discord-ollama
     ```
 
